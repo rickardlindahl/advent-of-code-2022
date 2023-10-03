@@ -1,19 +1,32 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-pub fn open_file(file_path: &str) -> BufReader<File> {
-    let file = File::open(file_path);
+use crate::elf::Elf;
 
-    let buf_reader = match file {
-        Ok(file) => BufReader::new(file),
-        Err(e) => {
-            panic!("Unable to open file {} - {}", file_path, e);
+fn add_calories(elves: &mut Vec<Elf>, calories: u32) {
+    match elves.last_mut() {
+        Some(elf) => {
+            elf.add_calories(calories);
+        }
+        None => {
+            let mut elf = Elf::new();
+            elf.add_calories(calories);
+            add_elf(elves, elf);
         }
     };
-
-    buf_reader
 }
 
+fn add_elf(elves: &mut Vec<Elf>, elf: Elf) {
+    elves.push(elf);
+}
+
+pub fn get_elves_from_input(input_file_path: &str, elves: &mut Vec<Elf>) {
+    let buf_reader = shared::open_file(input_file_path);
+
+    read_lines(buf_reader, elves, add_calories, |elves| {
+        add_elf(elves, Elf::new());
+    });
+}
 pub fn read_lines<T>(
     buf_reader: BufReader<File>,
     vec: &mut Vec<T>,

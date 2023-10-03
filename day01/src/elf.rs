@@ -4,9 +4,7 @@ pub struct Elf {
 
 impl Elf {
     pub fn new() -> Self {
-        Elf {
-            calories: 0,
-        }
+        Elf { calories: 0 }
     }
 
     pub fn add_calories(&mut self, calories: u32) {

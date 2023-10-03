@@ -1,10 +1,11 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use shared::open_file;
 
 use crate::elf::Elf;
 
 pub fn get_elves_from_input(input_file_path: &str, elves: &mut Vec<Elf>) {
-    let buf_reader = shared::open_file(input_file_path);
+    let buf_reader = open_file(input_file_path);
 
     read_lines(buf_reader, elves, add_calories, |elves| {
         add_elf(elves, Elf::new());

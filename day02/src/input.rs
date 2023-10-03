@@ -1,12 +1,13 @@
 use crate::strategy_guide::{EncryptedOpponentMove, EncryptedPlayerMove, StrategyGuide};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use shared::open_file;
 
 pub fn get_strategy_guides_from_input(
     input_file_path: &str,
     strategy_guides: &mut Vec<StrategyGuide>,
 ) {
-    let buf_reader = shared::open_file(input_file_path);
+    let buf_reader = open_file(input_file_path);
 
     read_lines(buf_reader, strategy_guides, add_strategy_guide);
 }

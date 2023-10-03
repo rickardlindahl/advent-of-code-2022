@@ -31,16 +31,16 @@ fn add_elf(elves: &mut Vec<Elf>, elf: Elf) {
 fn read_lines<T>(
     buf_reader: BufReader<File>,
     vec: &mut Vec<T>,
-    mut on_number: impl FnMut(&mut Vec<T>, u32),
-    mut on_empty: impl FnMut(&mut Vec<T>),
+    mut handle_number: impl FnMut(&mut Vec<T>, u32),
+    mut handle_empty: impl FnMut(&mut Vec<T>),
 ) {
     for line in buf_reader.lines() {
         match line {
             Ok(line) if line.parse::<u32>().is_ok() => {
-                on_number(vec, line.parse::<u32>().unwrap());
+                handle_number(vec, line.parse::<u32>().unwrap());
             }
             Ok(line) if line.trim().is_empty() => {
-                on_empty(vec);
+                handle_empty(vec);
             }
             Ok(_) => {}
             Err(_) => {

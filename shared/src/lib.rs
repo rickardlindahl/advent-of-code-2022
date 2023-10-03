@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{BufReader};
+use std::io::BufReader;
 
 pub fn open_file(file_path: &str) -> BufReader<File> {
     let file = File::open(file_path);

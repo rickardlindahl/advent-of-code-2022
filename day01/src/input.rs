@@ -1,14 +1,23 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use shared::open_file;
+use shared::{open_file, read_lines};
 
 use crate::elf::Elf;
 
 pub fn get_elves_from_input(input_file_path: &str, elves: &mut Vec<Elf>) {
     let buf_reader = open_file(input_file_path);
 
-    read_lines(buf_reader, elves, add_calories, |elves| {
-        add_elf(elves, Elf::new());
+    read_lines(buf_reader, |line| {
+        if line.trim().is_empty() {
+            add_elf(elves, Elf::new());
+        } else {
+            let calories = match line.parse::<u32>() {
+                Ok(calories) => calories,
+                _err => panic!(
+                    "Line is not empty and not a number. Bad input! Line: {}",
+                    line
+                ),
+            };
+            add_calories(elves, calories);
+        }
     });
 }
 
@@ -27,26 +36,4 @@ fn add_calories(elves: &mut Vec<Elf>, calories: u32) {
 
 fn add_elf(elves: &mut Vec<Elf>, elf: Elf) {
     elves.push(elf);
-}
-
-fn read_lines<T>(
-    buf_reader: BufReader<File>,
-    vec: &mut Vec<T>,
-    mut handle_number: impl FnMut(&mut Vec<T>, u32),
-    mut handle_empty: impl FnMut(&mut Vec<T>),
-) {
-    for line in buf_reader.lines() {
-        match line {
-            Ok(line) if line.parse::<u32>().is_ok() => {
-                handle_number(vec, line.parse::<u32>().unwrap());
-            }
-            Ok(line) if line.trim().is_empty() => {
-                handle_empty(vec);
-            }
-            Ok(_) => {}
-            Err(_) => {
-                panic!("Error reading lines");
-            }
-        }
-    }
 }

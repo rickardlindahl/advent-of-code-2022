@@ -1,12 +1,16 @@
 mod elf;
 mod input;
 
-use elf::{Elf};
+use elf::Elf;
 
 pub fn part1(elves: &Vec<Elf>) -> u32 {
     let most_calories = elves.into_iter().fold(0, |acc, elf| {
         let elf_calories = elf.total_calories();
-        if elf_calories > acc { elf_calories } else { acc }
+        if elf_calories > acc {
+            elf_calories
+        } else {
+            acc
+        }
     });
 
     most_calories

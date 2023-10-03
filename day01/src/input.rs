@@ -5,9 +5,7 @@ pub fn open_file(file_path: &str) -> BufReader<File> {
     let file = File::open(file_path);
 
     let buf_reader = match file {
-        Ok(file) => {
-            BufReader::new(file)
-        }
+        Ok(file) => BufReader::new(file),
         Err(e) => {
             panic!("Unable to open file {} - {}", file_path, e);
         }
@@ -16,7 +14,12 @@ pub fn open_file(file_path: &str) -> BufReader<File> {
     buf_reader
 }
 
-pub fn read_lines<T>(buf_reader: BufReader<File>, vec: &mut Vec<T>, mut on_number:impl FnMut(&mut Vec<T>, u32), mut on_empty: impl FnMut(&mut Vec<T>)) {
+pub fn read_lines<T>(
+    buf_reader: BufReader<File>,
+    vec: &mut Vec<T>,
+    mut on_number: impl FnMut(&mut Vec<T>, u32),
+    mut on_empty: impl FnMut(&mut Vec<T>),
+) {
     for line in buf_reader.lines() {
         match line {
             Ok(line) if line.parse::<u32>().is_ok() => {
@@ -26,7 +29,9 @@ pub fn read_lines<T>(buf_reader: BufReader<File>, vec: &mut Vec<T>, mut on_numbe
                 on_empty(vec);
             }
             Ok(_) => {}
-            Err(_) => { panic!("Error reading lines"); }
+            Err(_) => {
+                panic!("Error reading lines");
+            }
         }
     }
 }

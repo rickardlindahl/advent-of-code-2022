@@ -1,7 +1,6 @@
 use crate::strategy_guide::{EncryptedOpponentMove, EncryptedPlayerMove, StrategyGuide};
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use shared::open_file;
+use shared::{open_file, read_lines};
+use std::io::BufRead;
 
 pub fn get_strategy_guides_from_input(
     input_file_path: &str,
@@ -9,7 +8,12 @@ pub fn get_strategy_guides_from_input(
 ) {
     let buf_reader = open_file(input_file_path);
 
-    read_lines(buf_reader, strategy_guides, add_strategy_guide);
+    read_lines(buf_reader, |line| {
+        if line.trim().len() != 0 {
+            let guide: Vec<&str> = line.split(" ").collect();
+            add_strategy_guide(strategy_guides, guide);
+        }
+    });
 }
 
 fn add_strategy_guide(strategy_guides: &mut Vec<StrategyGuide>, guide: Vec<&str>) {
@@ -35,23 +39,4 @@ fn add_strategy_guide(strategy_guides: &mut Vec<StrategyGuide>, guide: Vec<&str>
         opponent_move,
         player_move,
     });
-}
-
-fn read_lines<T>(
-    buf_reader: BufReader<File>,
-    vec: &mut Vec<T>,
-    mut handle_line: impl FnMut(&mut Vec<T>, Vec<&str>),
-) {
-    for line in buf_reader.lines() {
-        match line {
-            Ok(line) if line.trim().len() != 0 => {
-                let guide: Vec<&str> = line.split(" ").collect();
-                handle_line(vec, guide);
-            }
-            Ok(_) => {}
-            Err(_) => {
-                panic!("Error reading lines");
-            }
-        }
-    }
 }

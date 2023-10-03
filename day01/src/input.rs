@@ -3,6 +3,14 @@ use std::io::{BufRead, BufReader};
 
 use crate::elf::Elf;
 
+pub fn get_elves_from_input(input_file_path: &str, elves: &mut Vec<Elf>) {
+    let buf_reader = shared::open_file(input_file_path);
+
+    read_lines(buf_reader, elves, add_calories, |elves| {
+        add_elf(elves, Elf::new());
+    });
+}
+
 fn add_calories(elves: &mut Vec<Elf>, calories: u32) {
     match elves.last_mut() {
         Some(elf) => {
@@ -20,14 +28,7 @@ fn add_elf(elves: &mut Vec<Elf>, elf: Elf) {
     elves.push(elf);
 }
 
-pub fn get_elves_from_input(input_file_path: &str, elves: &mut Vec<Elf>) {
-    let buf_reader = shared::open_file(input_file_path);
-
-    read_lines(buf_reader, elves, add_calories, |elves| {
-        add_elf(elves, Elf::new());
-    });
-}
-pub fn read_lines<T>(
+fn read_lines<T>(
     buf_reader: BufReader<File>,
     vec: &mut Vec<T>,
     mut on_number: impl FnMut(&mut Vec<T>, u32),

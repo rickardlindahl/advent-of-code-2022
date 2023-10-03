@@ -1,23 +1,15 @@
 pub struct Elf {
-    calories: Vec<u32>,
+    pub calories: u32,
 }
 
 impl Elf {
     pub fn new() -> Self {
         Elf {
-            calories: Vec::new(),
+            calories: 0,
         }
     }
 
     pub fn add_calories(&mut self, calories: u32) {
-        self.calories.push(calories);
-    }
-
-    pub fn total_calories(&self) -> u32 {
-        self.calories
-            .clone()
-            .into_iter()
-            .reduce(|acc, e| acc + e)
-            .unwrap_or(0_u32)
+        self.calories += calories;
     }
 }

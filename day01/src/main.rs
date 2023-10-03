@@ -5,9 +5,8 @@ use elf::Elf;
 
 pub fn part1(elves: &Vec<Elf>) -> u32 {
     let most_calories = elves.into_iter().fold(0, |acc, elf| {
-        let elf_calories = elf.total_calories();
-        if elf_calories > acc {
-            elf_calories
+        if elf.calories > acc {
+            elf.calories
         } else {
             acc
         }
@@ -18,15 +17,13 @@ pub fn part1(elves: &Vec<Elf>) -> u32 {
 
 pub fn part2(elves: &Vec<Elf>) -> u32 {
     let (first, second, third) = elves.into_iter().fold((0_u32, 0_u32, 0_u32), |acc, elf| {
-        let elf_calories = elf.total_calories();
-
         let (first, second, third) = acc;
-        if elf_calories > first {
-            (elf_calories, first, second)
-        } else if elf_calories > second {
-            (first, elf_calories, second)
-        } else if elf_calories > third {
-            (first, second, elf_calories)
+        if elf.calories > first {
+            (elf.calories, first, second)
+        } else if elf.calories > second {
+            (first, elf.calories, second)
+        } else if elf.calories > third {
+            (first, second, elf.calories)
         } else {
             acc
         }
